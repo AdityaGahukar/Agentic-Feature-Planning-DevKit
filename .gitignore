@@ -1,0 +1,19 @@
+# Operating System & Editor Files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Python Cache & Testing
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Agentic Feature Planning DevKit Ephemeral State
+.devkit/run-state/
+.devkit/run-state-*/

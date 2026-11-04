@@ -120,7 +120,7 @@ flowchart TD
 
 ## 4. Phase 1: Foundation, Schemas, Templates & Rubrics
 
-### TASK-001: Directory Scaffolding & Root Documentation
+### TASK-001: Directory Scaffolding & Root Documentation [COMPLETED]
 - **Objective:** Establish the clean project directory tree and foundational documentation.
 - **Implementation Details:**
   - Create directories: `core/stages/`, `core/rubrics/`, `core/templates/`, `core/schemas/`, `adapters/antigravity/`, `tests/fixtures/`, `tests/unit/`, `tests/integration/`.
@@ -130,15 +130,15 @@ flowchart TD
   - `.gitignore` (ignoring `.devkit/run-state/`, `__pycache__/`, `*.pyc`, `.DS_Store`)
 - **Dependencies:** None.
 - **Acceptance Criteria:**
-  - [ ] All specified directories exist on disk.
-  - [ ] Root `README.md` references approved spec v0.2.0 and HLD/LLD v1.0.0.
-  - [ ] `.gitignore` contains rules for temporary run-state.
+  - [x] All specified directories exist on disk.
+  - [x] Root `README.md` references approved spec v0.2.0 and HLD/LLD v1.0.0.
+  - [x] `.gitignore` contains rules for temporary run-state.
 - **Validation:** `ls -la` and directory existence verification.
 - **Expected Deliverable:** Scaffolded repository structure with `README.md`.
 
 ---
 
-### TASK-002: Checkpoint State Schemas
+### TASK-002: Checkpoint State Schemas [COMPLETED]
 - **Objective:** Create the strict Markdown schemas for temporary run-state files (`.devkit/run-state/`).
 - **Implementation Details:**
   - Define schemas for `intake.md`, `repo-map.md`, `repo-type.md`, `architecture.md`, `conventions.md`, and `stage-log.md`.
@@ -152,14 +152,14 @@ flowchart TD
   - `core/schemas/stage_log_schema.md`
 - **Dependencies:** TASK-001.
 - **Acceptance Criteria:**
-  - [ ] All 6 schema files define mandatory headers, front-matter fields, and section requirements.
-  - [ ] `stage_log_schema.md` defines state enum: `PENDING`, `IN_PROGRESS`, `COMPLETED`, `FAILED`, `SKIPPED`.
+  - [x] All 6 schema files define mandatory headers, front-matter fields, and section requirements.
+  - [x] `stage_log_schema.md` defines state enum: `PENDING`, `IN_PROGRESS`, `COMPLETED`, `FAILED`, `SKIPPED`.
 - **Validation:** Manual inspection against LLD Section 7 and 10.
 - **Expected Deliverable:** 6 complete checkpoint state schemas.
 
 ---
 
-### TASK-003: Blueprint Output Templates
+### TASK-003: Blueprint Output Templates [COMPLETED]
 - **Objective:** Create the canonical production templates for all 7 Blueprint deliverables.
 - **Implementation Details:**
   - Implement full templates with YAML front-matter, placeholders (`{{...}}`), section headers, and traceability anchors.
@@ -173,14 +173,14 @@ flowchart TD
   - `core/templates/plan_run_log_template.md`
 - **Dependencies:** TASK-001.
 - **Acceptance Criteria:**
-  - [ ] All 7 templates match LLD Section 6 verbatim.
-  - [ ] Every template includes version `0.2.0`, standard front-matter fields, and relative cross-links.
+  - [x] All 7 templates match LLD Section 6 verbatim.
+  - [x] Every template includes version `0.2.0`, standard front-matter fields, and relative cross-links.
 - **Validation:** Text comparison against LLD Section 6 definitions.
 - **Expected Deliverable:** 7 canonical Blueprint output templates.
 
 ---
 
-### TASK-004: Decision & Classification Rubrics
+### TASK-004: Decision & Classification Rubrics [COMPLETED]
 - **Objective:** Formalize the 4-tier Evidence Rubric and Repository Classification Matrix into reusable core references.
 - **Implementation Details:**
   - `evidence_rubric.md`: Operationalize tiers (*Evidence-Supported*, *Reasonable Assumption*, *Design Choice*, *Critical Ambiguity*) with human intervention constraints (max 1 pause, max 5 questions).
@@ -190,8 +190,8 @@ flowchart TD
   - `core/rubrics/repo_classification_matrix.md`
 - **Dependencies:** TASK-001.
 - **Acceptance Criteria:**
-  - [ ] Zero numeric probability scores (e.g. "70%") used; purely evidence-driven.
-  - [ ] Classification scoring weights match LLD Section 4.1.
+  - [x] Zero numeric probability scores (e.g. "70%") used; purely evidence-driven.
+  - [x] Classification scoring weights match LLD Section 4.1.
 - **Validation:** Review against LLD Section 4 & Section 9.
 - **Expected Deliverable:** 2 formal rubric instruction files.
 
@@ -617,8 +617,8 @@ Between each implementation phase, a formal verification gate must pass before a
 ├───────┬───────────────────────────────┬─────────────────────────────────────┤
 │ Gate  │ Phase Transition              │ Verification Criteria               │
 ├───────┼───────────────────────────────┼─────────────────────────────────────┤
-│ VG-1  │ Phase 1 ──► Phase 2           │ All 6 state schemas, 7 templates,   │
-│       │                               │ and 2 rubrics exist and match LLD.  │
+│ VG-1  │ Phase 1 ──► Phase 2           │ [PASSED] All 6 state schemas,       │
+│       │                               │ 7 templates, and 2 rubrics exist.   │
 ├───────┼───────────────────────────────┼─────────────────────────────────────┤
 │ VG-2  │ Phase 2 ──► Phase 3           │ Orchestrator and all 8 stage docs   │
 │       │                               │ complete; zero harness tool leakage.│
