@@ -199,7 +199,7 @@ flowchart TD
 
 ## 5. Phase 2: Portable Core Planning Engine
 
-### TASK-005: Master Core Orchestrator
+### TASK-005: Master Core Orchestrator [COMPLETED]
 - **Objective:** Write the central execution algorithm (`core/orchestrator.md`) driving the single-agent 8-stage pipeline.
 - **Implementation Details:**
   - Encode Algorithm 1 from LLD Section 3.1.
@@ -209,15 +209,15 @@ flowchart TD
   - `core/orchestrator.md`
 - **Dependencies:** TASK-002, TASK-003, TASK-004.
 - **Acceptance Criteria:**
-  - [ ] Fully specifies single-agent autonomous execution across Stages 1–8.
-  - [ ] Contains zero Antigravity-specific tool names (uses abstract file read/write directives).
-  - [ ] Contains strict sandboxing instructions (only write inside `.devkit/`).
+  - [x] Fully specifies single-agent autonomous execution across Stages 1–8.
+  - [x] Contains zero Antigravity-specific tool names (uses abstract file read/write directives).
+  - [x] Contains strict sandboxing instructions (only write inside `.devkit/`).
 - **Validation:** Walkthrough against LLD Section 3.
 - **Expected Deliverable:** Complete master orchestrator specification.
 
 ---
 
-### TASK-006: Stage 1 Intake & Clarification Instruction
+### TASK-006: Stage 1 Intake & Clarification Instruction [COMPLETED]
 - **Objective:** Author detailed agent instructions for Stage 1 (Intake, Slug computation, Critical Ambiguity evaluation).
 - **Implementation Details:**
   - Specify input parameter validation, slug derivation rules (6–8 words, lowercase, kebab-case, collision suffixing).
@@ -227,15 +227,15 @@ flowchart TD
   - `core/stages/stage1_intake.md`
 - **Dependencies:** TASK-005.
 - **Acceptance Criteria:**
-  - [ ] Covers slug generation, collision detection, and depth evaluation.
-  - [ ] Enforces maximum 1 Q&A pause with maximum 5 batched questions.
-  - [ ] Mandates writing `intake.md` per schema before proceeding.
+  - [x] Covers slug generation, collision detection, and depth evaluation.
+  - [x] Enforces maximum 1 Q&A pause with maximum 5 batched questions.
+  - [x] Mandates writing `intake.md` per schema before proceeding.
 - **Validation:** Review against LLD Section 3.2 (Stage 1).
 - **Expected Deliverable:** `stage1_intake.md`.
 
 ---
 
-### TASK-007: Stage 2 Repository Reconnaissance Instruction
+### TASK-007: Stage 2 Repository Reconnaissance Instruction [COMPLETED]
 - **Objective:** Author instructions for Stage 2 (Read-only scanning, Manifest analysis, Archetype detection).
 - **Implementation Details:**
   - Guide agent through the 4-pass scanning routine (LLD Section 4.2).
@@ -245,15 +245,15 @@ flowchart TD
   - `core/stages/stage2_recon.md`
 - **Dependencies:** TASK-005.
 - **Acceptance Criteria:**
-  - [ ] Strictly forbids fabricating file paths.
-  - [ ] Limits deep inspection to max 50 relevant files to conserve context.
-  - [ ] Writes `repo-map.md` and `repo-type.md` matching schemas.
+  - [x] Strictly forbids fabricating file paths.
+  - [x] Limits deep inspection to max 50 relevant files to conserve context.
+  - [x] Writes `repo-map.md` and `repo-type.md` matching schemas.
 - **Validation:** Review against LLD Section 4.
 - **Expected Deliverable:** `stage2_recon.md`.
 
 ---
 
-### TASK-008: Stage 3 Architecture & Conventions Instruction
+### TASK-008: Stage 3 Architecture & Conventions Instruction [COMPLETED]
 - **Objective:** Author instructions for Stage 3 (Pattern inference, Module boundary mapping, 7-dimension convention extraction).
 - **Implementation Details:**
   - Implement Algorithm 2 (Empirical Convention Extraction across file naming, directory layout, imports, errors, logging, testing, APIs).
@@ -263,15 +263,15 @@ flowchart TD
   - `core/stages/stage3_architecture.md`
 - **Dependencies:** TASK-005.
 - **Acceptance Criteria:**
-  - [ ] Tags all architectural patterns as `[INFERRED]`.
-  - [ ] Enforces empirical extraction with code samples as evidence.
-  - [ ] Documents all framework convention deviations as `[ASSUMPTION: evidence-supported]`.
+  - [x] Tags all architectural patterns as `[INFERRED]`.
+  - [x] Enforces empirical extraction with code samples as evidence.
+  - [x] Documents all framework convention deviations as `[ASSUMPTION: evidence-supported]`.
 - **Validation:** Review against LLD Section 5.
 - **Expected Deliverable:** `stage3_architecture.md`.
 
 ---
 
-### TASK-009: Stage 4 Feature Specification Instruction
+### TASK-009: Stage 4 Feature Specification Instruction [COMPLETED]
 - **Objective:** Author instructions for Stage 4 (Synthesizing User Stories, FRs, ACs, and scope boundaries).
 - **Implementation Details:**
   - Instruct agent to parse feature intent and repo constraints into structured `US-xxx`, `FR-xxx`, and testable `AC-xxx` items.
@@ -281,15 +281,15 @@ flowchart TD
   - `core/stages/stage4_spec.md`
 - **Dependencies:** TASK-006, TASK-007, TASK-008.
 - **Acceptance Criteria:**
-  - [ ] Every FR must have at least one testable, binary-pass AC.
-  - [ ] All assumptions categorized per Evidence Rubric tiers.
-  - [ ] Output saved to `.devkit/plans/<slug>/feature-spec.md`.
+  - [x] Every FR must have at least one testable, binary-pass AC.
+  - [x] All assumptions categorized per Evidence Rubric tiers.
+  - [x] Output saved to `.devkit/plans/<slug>/feature-spec.md`.
 - **Validation:** Review against LLD Section 6.1.
 - **Expected Deliverable:** `stage4_spec.md`.
 
 ---
 
-### TASK-010: Stage 5 Impact & Risk Analysis Instruction
+### TASK-010: Stage 5 Impact & Risk Analysis Instruction [COMPLETED]
 - **Objective:** Author instructions for Stage 5 (Blast radius, backward compatibility, security, migration, and risk register).
 - **Implementation Details:**
   - Instruct identification of exact file modification targets and new files (`[NEW FILE]`).
@@ -299,14 +299,14 @@ flowchart TD
   - `core/stages/stage5_impact_risk.md`
 - **Dependencies:** TASK-009.
 - **Acceptance Criteria:**
-  - [ ] Generates impact analysis separating existing files from `[NEW FILE]`.
-  - [ ] Includes Risk Register populated with at least one technical risk and mitigation.
+  - [x] Generates impact analysis separating existing files from `[NEW FILE]`.
+  - [x] Includes Risk Register populated with at least one technical risk and mitigation.
 - **Validation:** Review against LLD Section 6.5.
 - **Expected Deliverable:** `stage5_impact_risk.md`.
 
 ---
 
-### TASK-011: Stage 6 Task Decomposition & DAG Instruction
+### TASK-011: Stage 6 Task Decomposition & DAG Instruction [COMPLETED]
 - **Objective:** Author instructions for Stage 6 (Decomposing into phased atomic tasks, verifying paths, generating Mermaid DAG).
 - **Implementation Details:**
   - Instruct atomic task formulation (`TASK-xxx`) with metadata: Type, Complexity (S/M/L/XL), Requirements (`FR-xxx`), Dependencies, Target Files, Instructions, Verification.
@@ -317,15 +317,15 @@ flowchart TD
   - `core/stages/stage6_tasks.md`
 - **Dependencies:** TASK-010.
 - **Acceptance Criteria:**
-  - [ ] Produces ordered, phased tasks with zero circular dependencies.
-  - [ ] Includes valid Mermaid DAG flowchart.
-  - [ ] Populates `task-breakdown.md` and `implementation-plan.md`.
+  - [x] Produces ordered, phased tasks with zero circular dependencies.
+  - [x] Includes valid Mermaid DAG flowchart.
+  - [x] Populates `task-breakdown.md` and `implementation-plan.md`.
 - **Validation:** Review against LLD Section 6.2.
 - **Expected Deliverable:** `stage6_tasks.md`.
 
 ---
 
-### TASK-012: Stage 7 Validation Planning Instruction
+### TASK-012: Stage 7 Validation Planning Instruction [COMPLETED]
 - **Objective:** Author instructions for Stage 7 (Mapping ACs to test cases, fixture specifications, manual procedures).
 - **Implementation Details:**
   - Map 100% of `AC-xxx` items to explicit `TC-xxx` test specifications.
@@ -336,14 +336,14 @@ flowchart TD
   - `core/stages/stage7_validation.md`
 - **Dependencies:** TASK-011.
 - **Acceptance Criteria:**
-  - [ ] 100% coverage of Acceptance Criteria in test case specifications.
-  - [ ] Specifies target test files and runner commands aligned with repo.
+  - [x] 100% coverage of Acceptance Criteria in test case specifications.
+  - [x] Specifies target test files and runner commands aligned with repo.
 - **Validation:** Review against LLD Section 6.3.
 - **Expected Deliverable:** `stage7_validation.md`.
 
 ---
 
-### TASK-013: Stage 8 Quality Gate & Finalization Instruction
+### TASK-013: Stage 8 Quality Gate & Finalization Instruction [COMPLETED]
 - **Objective:** Author instructions for Stage 8 (Executing verification gates QG-H1..QG-H5 and QG-S1..QG-S4, writing Blueprints, safe cleanup).
 - **Implementation Details:**
   - Detail step-by-step agent execution of Hard Gates: path grounding, acyclic DAG (Kahn's algorithm), FR-to-TASK coverage, AC-to-TC coverage, zero source code modification.
@@ -355,8 +355,8 @@ flowchart TD
   - `core/stages/stage8_quality_gate.md`
 - **Dependencies:** TASK-012.
 - **Acceptance Criteria:**
-  - [ ] Fully specifies gate evaluation logic and status determination (`approved`, `draft`, `incomplete`).
-  - [ ] Enforces consolidation of `plan-run.log` and cleanup of `.devkit/run-state/`.
+  - [x] Fully specifies gate evaluation logic and status determination (`approved`, `draft`, `incomplete`).
+  - [x] Enforces consolidation of `plan-run.log` and cleanup of `.devkit/run-state/`.
 - **Validation:** Review against LLD Section 8.
 - **Expected Deliverable:** `stage8_quality_gate.md`.
 
@@ -620,8 +620,8 @@ Between each implementation phase, a formal verification gate must pass before a
 │ VG-1  │ Phase 1 ──► Phase 2           │ [PASSED] All 6 state schemas,       │
 │       │                               │ 7 templates, and 2 rubrics exist.   │
 ├───────┼───────────────────────────────┼─────────────────────────────────────┤
-│ VG-2  │ Phase 2 ──► Phase 3           │ Orchestrator and all 8 stage docs   │
-│       │                               │ complete; zero harness tool leakage.│
+│ VG-2  │ Phase 2 ──► Phase 3           │ [PASSED] Orchestrator and all 8     │
+│       │                               │ stage docs complete; zero tool leak.│
 ├───────┼───────────────────────────────┼─────────────────────────────────────┤
 │ VG-3  │ Phase 3 ──► Phase 4           │ SKILL.md, handler, and generic      │
 │       │                               │ contract valid; parameter mapping ok│
