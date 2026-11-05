@@ -364,7 +364,7 @@ flowchart TD
 
 ## 6. Phase 3: Harness Adapters (Antigravity & Generic)
 
-### TASK-014: Antigravity Skill Declaration (`SKILL.md`)
+### TASK-014: Antigravity Skill Declaration (`SKILL.md`) [COMPLETED]
 - **Objective:** Package the portable DevKit core as a native Antigravity skill.
 - **Implementation Details:**
   - Create `adapters/antigravity/SKILL.md` with YAML front-matter (`name: feature-planner`, description, parameters, tools: `read_file`, `write_file`, `run_command`).
@@ -373,15 +373,15 @@ flowchart TD
   - `adapters/antigravity/SKILL.md`
 - **Dependencies:** TASK-005, TASK-013.
 - **Acceptance Criteria:**
-  - [ ] Conforms to Antigravity skill specification format.
-  - [ ] Declares only standard read/write/shell tools.
-  - [ ] Forbids writing outside `.devkit/`.
+  - [x] Conforms to Antigravity skill specification format.
+  - [x] Declares only standard read/write/shell tools.
+  - [x] Forbids writing outside `.devkit/`.
 - **Validation:** Skill format inspection against Antigravity skill guide.
 - **Expected Deliverable:** `adapters/antigravity/SKILL.md`.
 
 ---
 
-### TASK-015: Antigravity Handler & Chat Presentation
+### TASK-015: Antigravity Handler & Chat Presentation [COMPLETED]
 - **Objective:** Create execution guidelines for parameter extraction, Q&A relay, and completion summary presentation.
 - **Implementation Details:**
   - Document parameter mapping from chat intents into canonical arguments (`repo`, `feature`, `stack`, `depth`).
@@ -391,14 +391,14 @@ flowchart TD
   - `adapters/antigravity/handler.md`
 - **Dependencies:** TASK-014.
 - **Acceptance Criteria:**
-  - [ ] Details single batched Q&A pause presentation in chat.
-  - [ ] Formats final summary with relative and clickable file links.
+  - [x] Details single batched Q&A pause presentation in chat.
+  - [x] Formats final summary with relative and clickable file links.
 - **Validation:** Review against LLD Section 9.
 - **Expected Deliverable:** `adapters/antigravity/handler.md`.
 
 ---
 
-### TASK-016: Generic Harness Adapter Contract
+### TASK-016: Generic Harness Adapter Contract [COMPLETED]
 - **Objective:** Formalize the minimal adapter contract for future runtimes (Cursor, Claude Code, GitHub Copilot).
 - **Implementation Details:**
   - Document the 4 primitive capabilities required: workspace access, instruction injection, human clarification relay, and tool independence.
@@ -407,8 +407,8 @@ flowchart TD
   - `adapters/generic_contract.md`
 - **Dependencies:** TASK-005.
 - **Acceptance Criteria:**
-  - [ ] Confirms core is 100% executable by any LLM harness with basic file tools.
-  - [ ] Contains zero vendor-specific proprietary requirements.
+  - [x] Confirms core is 100% executable by any LLM harness with basic file tools.
+  - [x] Contains zero vendor-specific proprietary requirements.
 - **Validation:** Review against LLD Section 10.
 - **Expected Deliverable:** `adapters/generic_contract.md`.
 
@@ -416,7 +416,7 @@ flowchart TD
 
 ## 7. Phase 4: Deterministic Quality Gate Utilities & Unit Tests
 
-### TASK-017: Deterministic Slug & Collision Utility
+### TASK-017: Deterministic Slug & Collision Utility [COMPLETED]
 - **Objective:** Implement and test the slug generation and collision detection logic in Python for automated verification.
 - **Implementation Details:**
   - Implement `slug_generator.py`: stop-word removal, lowercase, hyphenation, 60-character truncation, `-2`, `-3` directory collision checking.
@@ -426,15 +426,15 @@ flowchart TD
   - `tests/unit/test_slug_generator.py`
 - **Dependencies:** TASK-003, TASK-011.
 - **Acceptance Criteria:**
-  - [ ] Generates clean URL-safe slugs ≤ 60 chars.
-  - [ ] Detects directory collisions and suffixes `-2`, `-3` reliably.
-  - [ ] 100% pass on unit tests.
+  - [x] Generates clean URL-safe slugs ≤ 60 chars.
+  - [x] Detects directory collisions and suffixes `-2`, `-3` reliably.
+  - [x] 100% pass on unit tests.
 - **Validation:** `pytest tests/unit/test_slug_generator.py` (or Python unittest).
 - **Expected Deliverable:** Working slug utility and unit test suite.
 
 ---
 
-### TASK-018: Task DAG Acyclicity Validator
+### TASK-018: Task DAG Acyclicity Validator [COMPLETED]
 - **Objective:** Implement Kahn's algorithm cycle detector in Python to validate Mermaid DAGs and task dependencies.
 - **Implementation Details:**
   - Implement `dag_validator.py`: parse `task-breakdown.md` tasks and "Depends on:" fields into an adjacency list; execute Kahn's topological sort.
@@ -444,15 +444,15 @@ flowchart TD
   - `tests/unit/test_dag_validation.py`
 - **Dependencies:** TASK-011, TASK-013.
 - **Acceptance Criteria:**
-  - [ ] Correctly identifies acyclic graphs and returns topological order.
-  - [ ] Detects single-edge and multi-edge circular cycles and returns failing node IDs.
-  - [ ] 100% pass on unit tests.
+  - [x] Correctly identifies acyclic graphs and returns topological order.
+  - [x] Detects single-edge and multi-edge circular cycles and returns failing node IDs.
+  - [x] 100% pass on unit tests.
 - **Validation:** `pytest tests/unit/test_dag_validation.py`.
 - **Expected Deliverable:** DAG validator utility and unit test suite.
 
 ---
 
-### TASK-019: Path Grounding & Verification Utility
+### TASK-019: Path Grounding & Verification Utility [COMPLETED]
 - **Objective:** Implement path grounding verification checking task targets against disk inventory.
 - **Implementation Details:**
   - Implement `path_grounding.py`: regex extraction of "Modify: `path`" and "Create: `[NEW FILE: path]`" from `task-breakdown.md`; checks disk existence.
@@ -462,15 +462,15 @@ flowchart TD
   - `tests/unit/test_path_grounding.py`
 - **Dependencies:** TASK-013.
 - **Acceptance Criteria:**
-  - [ ] Flags ungrounded paths as Hard Gate failures.
-  - [ ] Validates `[NEW FILE]` syntax and verifies target does not already exist.
-  - [ ] 100% pass on unit tests.
+  - [x] Flags ungrounded paths as Hard Gate failures.
+  - [x] Validates `[NEW FILE]` syntax and verifies target does not already exist.
+  - [x] 100% pass on unit tests.
 - **Validation:** `pytest tests/unit/test_path_grounding.py`.
 - **Expected Deliverable:** Path grounding utility and unit test suite.
 
 ---
 
-### TASK-020: Traceability Matrix Validator
+### TASK-020: Traceability Matrix Validator [COMPLETED]
 - **Objective:** Implement bidirectional traceability validator checking FR ↔ TASK and AC ↔ TC mapping.
 - **Implementation Details:**
   - Implement `traceability_validator.py`: extracts all `FR-xxx` and `AC-xxx` from `feature-spec.md`; verifies mapping in `task-breakdown.md` and `validation-plan.md`.
@@ -480,9 +480,9 @@ flowchart TD
   - `tests/unit/test_traceability_matrix.py`
 - **Dependencies:** TASK-009, TASK-012, TASK-013.
 - **Acceptance Criteria:**
-  - [ ] Confirms bidirectional mapping without false positives.
-  - [ ] Flags unmapped FRs or untested ACs with exact missing IDs.
-  - [ ] 100% pass on unit tests.
+  - [x] Confirms bidirectional mapping without false positives.
+  - [x] Flags unmapped FRs or untested ACs with exact missing IDs.
+  - [x] 100% pass on unit tests.
 - **Validation:** `pytest tests/unit/test_traceability_matrix.py`.
 - **Expected Deliverable:** Traceability matrix validator and unit test suite.
 
@@ -623,11 +623,11 @@ Between each implementation phase, a formal verification gate must pass before a
 │ VG-2  │ Phase 2 ──► Phase 3           │ [PASSED] Orchestrator and all 8     │
 │       │                               │ stage docs complete; zero tool leak.│
 ├───────┼───────────────────────────────┼─────────────────────────────────────┤
-│ VG-3  │ Phase 3 ──► Phase 4           │ SKILL.md, handler, and generic      │
-│       │                               │ contract valid; parameter mapping ok│
+│ VG-3  │ Phase 3 ──► Phase 4           │ [PASSED] SKILL.md, handler, and     │
+│       │                               │ generic contract valid; ready.      │
 ├───────┼───────────────────────────────┼─────────────────────────────────────┤
-│ VG-4  │ Phase 4 ──► Phase 5           │ All 4 deterministic unit test suites│
-│       │                               │ pass with 100% success rate.        │
+│ VG-4  │ Phase 4 ──► Phase 5           │ [PASSED] All 4 unit test suites     │
+│       │                               │ pass (18/18 tests, 100% success).   │
 ├───────┼───────────────────────────────┼─────────────────────────────────────┤
 │ VG-5  │ Phase 5 ──► Phase 6           │ 5 mock fixtures classified properly;│
 │       │                               │ multi-archetype integration tests ok│
