@@ -490,7 +490,7 @@ flowchart TD
 
 ## 8. Phase 5: Multi-Archetype Fixtures & Integration Tests
 
-### TASK-021: Mock Repository Fixtures (5 Archetypes)
+### TASK-021: Mock Repository Fixtures (5 Archetypes) [COMPLETED]
 - **Objective:** Create realistic mock repository trees representing the 5 key codebase archetypes.
 - **Implementation Details:**
   - `sample_app/`: Node.js Express server + React frontend, `package.json`, routes, controllers, tests.
@@ -502,14 +502,14 @@ flowchart TD
   - Realistic mock file trees under `tests/fixtures/` (minimal code sufficient for reconnaissance).
 - **Dependencies:** TASK-001.
 - **Acceptance Criteria:**
-  - [ ] All 5 fixtures contain appropriate manifests, configs, and directory structures.
-  - [ ] Fixtures trigger correct archetype classification in `repo_classification_matrix.md`.
+  - [x] All 5 fixtures contain appropriate manifests, configs, and directory structures.
+  - [x] Fixtures trigger correct archetype classification in `repo_classification_matrix.md`.
 - **Validation:** Manifest and directory inspection.
 - **Expected Deliverable:** 5 mock repository fixture directories.
 
 ---
 
-### TASK-022: Multi-Archetype Integration Tests
+### TASK-022: Multi-Archetype Integration Tests [COMPLETED]
 - **Objective:** Build test harness simulating planning runs against the 5 mock fixtures and verifying archetype-specific outputs.
 - **Implementation Details:**
   - Implement `test_e2e_app_planning.py`: runs simulated planning workflow against fixtures.
@@ -520,15 +520,15 @@ flowchart TD
   - `tests/integration/integration_runner.py`
 - **Dependencies:** TASK-017, TASK-018, TASK-019, TASK-020, TASK-021.
 - **Acceptance Criteria:**
-  - [ ] All 5 fixtures successfully classified with expected archetype.
-  - [ ] Extracted conventions reflect the mock codebases (e.g. PascalCase vs kebab-case).
-  - [ ] All Hard Quality Gates pass on generated fixture plans.
+  - [x] All 5 fixtures successfully classified with expected archetype.
+  - [x] Extracted conventions reflect the mock codebases (e.g. PascalCase vs kebab-case).
+  - [x] All Hard Quality Gates pass on generated fixture plans.
 - **Validation:** Run integration test suite against fixtures.
 - **Expected Deliverable:** Integration test harness and multi-archetype test suite.
 
 ---
 
-### TASK-023: Antigravity End-to-End Simulation Test
+### TASK-023: Antigravity End-to-End Simulation Test [COMPLETED]
 - **Objective:** Verify Antigravity adapter skill bindings and parameter translation in a simulated agent environment.
 - **Implementation Details:**
   - Test `SKILL.md` invocation with mock user prompts.
@@ -538,8 +538,8 @@ flowchart TD
   - `tests/integration/test_antigravity_adapter.py`
 - **Dependencies:** TASK-015, TASK-022.
 - **Acceptance Criteria:**
-  - [ ] Verifies skill parameter extraction correctly initializes orchestrator.
-  - [ ] Verifies completion summary displays all generated artifact links.
+  - [x] Verifies skill parameter extraction correctly initializes orchestrator.
+  - [x] Verifies completion summary displays all generated artifact links.
 - **Validation:** Run adapter simulation test.
 - **Expected Deliverable:** `test_antigravity_adapter.py`.
 
@@ -547,7 +547,7 @@ flowchart TD
 
 ## 9. Phase 6: End-to-End Validation, Recovery & Safety Sign-Off
 
-### TASK-024: Fresh-Session Recovery & Interruption Test
+### TASK-024: Fresh-Session Recovery & Interruption Test [COMPLETED]
 - **Objective:** Verify checkpoint persistence, stale-state detection, and session recovery without conversation history.
 - **Implementation Details:**
   - Implement `test_session_recovery.py`:
@@ -562,14 +562,14 @@ flowchart TD
   - `tests/integration/test_session_recovery.py`
 - **Dependencies:** TASK-022, TASK-023.
 - **Acceptance Criteria:**
-  - [ ] Interrupted run resumes cleanly from checkpoint without repeating Stages 1–3.
-  - [ ] Unrelated feature statement triggers safe state purge without pollution.
+  - [x] Interrupted run resumes cleanly from checkpoint without repeating Stages 1–3.
+  - [x] Unrelated feature statement triggers safe state purge without pollution.
 - **Validation:** `pytest tests/integration/test_session_recovery.py`.
 - **Expected Deliverable:** Fresh-session recovery test suite.
 
 ---
 
-### TASK-025: Strict Source Code Non-Mutation Test
+### TASK-025: Strict Source Code Non-Mutation Test [COMPLETED]
 - **Objective:** Verify that 100% of planning operations leave target repository source files and tests untouched.
 - **Implementation Details:**
   - Implement `test_non_mutation.py`:
@@ -582,14 +582,14 @@ flowchart TD
   - `tests/integration/test_non_mutation.py`
 - **Dependencies:** TASK-022, TASK-023.
 - **Acceptance Criteria:**
-  - [ ] Exact git status assertion passes: zero changes outside `.devkit/`.
-  - [ ] File checksum verification confirms 100% immutability of application code.
+  - [x] Exact git status assertion passes: zero changes outside `.devkit/`.
+  - [x] File checksum verification confirms 100% immutability of application code.
 - **Validation:** `pytest tests/integration/test_non_mutation.py`.
 - **Expected Deliverable:** Non-mutation safety test suite.
 
 ---
 
-### TASK-026: Final MVP Verification & Documentation Sign-Off
+### TASK-026: Final MVP Verification & Documentation Sign-Off [COMPLETED]
 - **Objective:** Perform final verification of all acceptance criteria (`AC-1` to `AC-10`) and compile the MVP validation report.
 - **Implementation Details:**
   - Run full test suite: unit tests, integration tests, recovery tests, non-mutation tests.
@@ -599,9 +599,9 @@ flowchart TD
   - `docs/mvp_verification_report.md`
 - **Dependencies:** TASK-024, TASK-025.
 - **Acceptance Criteria:**
-  - [ ] 100% tests passing across all test suites.
-  - [ ] All 10 Specification Acceptance Criteria verified and documented.
-  - [ ] Zero unhandled deviations or open architectural questions.
+  - [x] 100% tests passing across all test suites.
+  - [x] All 10 Specification Acceptance Criteria verified and documented.
+  - [x] Zero unhandled deviations or open architectural questions.
 - **Validation:** Complete test run and documentation audit.
 - **Expected Deliverable:** Final MVP verification report and sign-off.
 
@@ -629,10 +629,10 @@ Between each implementation phase, a formal verification gate must pass before a
 │ VG-4  │ Phase 4 ──► Phase 5           │ [PASSED] All 4 unit test suites     │
 │       │                               │ pass (18/18 tests, 100% success).   │
 ├───────┼───────────────────────────────┼─────────────────────────────────────┤
-│ VG-5  │ Phase 5 ──► Phase 6           │ 5 mock fixtures classified properly;│
-│       │                               │ multi-archetype integration tests ok│
+│ VG-5  │ Phase 5 ──► Phase 6           │ [PASSED] 5 mock fixtures classified │
+│       │                               │ properly; multi-archetype tests ok. │
 ├───────┼───────────────────────────────┼─────────────────────────────────────┤
-│ VG-6  │ Phase 6 ──► MVP Complete      │ Recovery test passes; 0 non-devkit  │
+│ VG-6  │ Phase 6 ──► MVP Complete      │ [PASSED] Recovery test passes; 0    │
 │       │                               │ mutations; all 10 ACs verified.     │
 └───────┴───────────────────────────────┴─────────────────────────────────────┘
 ```
