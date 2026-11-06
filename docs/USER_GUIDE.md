@@ -36,38 +36,35 @@ agentic-feature-planning-devkit/
 ## 3. How do I get it?
 
 ### Publishing / Sourcing from GitHub
-To publish this DevKit to GitHub for your team:
-```bash
-git remote add origin https://github.com/<your-org>/agentic-feature-planning-devkit.git
-git branch -M main
-git push -u origin main
+The DevKit is published on GitHub at:
+```text
+https://github.com/AdityaGahukar/Agentic-Feature-Planning-DevKit
 ```
-*(Replace `<your-org>` with your GitHub organization or username).*
 
-Developers can then obtain the DevKit using one of the methods below.
+Developers can obtain and install the DevKit into any project using one of the methods below.
 
 ---
 
 ## 4. How do I set it up in my project?
 
-You do **not** need a separate repository containing just `core/` and `adapters/`. Because the DevKit is tiny (~680 KB total), you can install it using either of these two methods:
+You do **not** need a separate repository containing just `core/` and `adapters/`. Because the DevKit is lightweight (~680 KB total), you can install it using any of these methods:
 
 ### Method 1: Git Submodule (Best for Teams)
 Keep the DevKit pinned inside your application repository so all team members have access:
 
 ```bash
 # In your target application repository:
-git submodule add https://github.com/<your-org>/agentic-feature-planning-devkit.git .agents/skills/feature-planner
+git submodule add https://github.com/AdityaGahukar/Agentic-Feature-Planning-DevKit.git .agents/skills/feature-planner
 ```
 
 ### Method 2: One-Line Installer Script
 Run the automated installer in your target project root:
 ```bash
 # From GitHub:
-curl -fsSL https://raw.githubusercontent.com/<your-org>/agentic-feature-planning-devkit/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/AdityaGahukar/Agentic-Feature-Planning-DevKit/main/install.sh | bash
 
 # OR from a local clone on your machine:
-/path/to/agentic-feature-planning-devkit/install.sh
+/path/to/Agentic-Feature-Planning-DevKit/install.sh
 ```
 This automatically places the skill files and portable core into `.agents/skills/feature-planner/`.
 
@@ -199,7 +196,7 @@ If your session disconnects or an AI tool runs out of quota midway through plann
   ```
 - **If using Installer / Copy:**
   ```bash
-  curl -fsSL https://raw.githubusercontent.com/<your-org>/agentic-feature-planning-devkit/main/install.sh | bash
+  curl -fsSL https://raw.githubusercontent.com/AdityaGahukar/Agentic-Feature-Planning-DevKit/main/install.sh | bash
   ```
 
 Because all generated plans are self-contained Markdown files inside `.devkit/plans/`, updating the DevKit will never modify or break your existing plans.

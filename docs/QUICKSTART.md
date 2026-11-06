@@ -27,8 +27,6 @@ The **Feature Planning DevKit** solves this by adding an autonomous **planning s
 
 ## 3. How do I obtain and configure it?
 
-> **Repository Note:** When publishing this repository to GitHub, replace `<your-org>` below with your GitHub username or organization (e.g. `https://github.com/my-org/agentic-feature-planning-devkit.git`).
-
 You have two clean options to add the DevKit to your project:
 
 ### Option A: Git Submodule (Recommended for Teams)
@@ -39,7 +37,7 @@ Keep the DevKit connected to your project repository so any team member who clon
 cd /path/to/my-project
 
 # Add DevKit directly into your project's Antigravity skills directory:
-git submodule add https://github.com/<your-org>/agentic-feature-planning-devkit.git .agents/skills/feature-planner
+git submodule add https://github.com/AdityaGahukar/Agentic-Feature-Planning-DevKit.git .agents/skills/feature-planner
 ```
 
 ### Option B: Quick Installer / Local Copy
@@ -50,12 +48,12 @@ If you prefer not to use submodules, install only the required skill and core fi
 cd /path/to/my-project
 
 # Run the installer from GitHub:
-curl -fsSL https://raw.githubusercontent.com/<your-org>/agentic-feature-planning-devkit/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/AdityaGahukar/Agentic-Feature-Planning-DevKit/main/install.sh | bash
 
 # OR copy from a local clone of this DevKit repository:
 mkdir -p .agents/skills/feature-planner
-cp -r /path/to/agentic-feature-planning-devkit/adapters/antigravity/* .agents/skills/feature-planner/
-cp -r /path/to/agentic-feature-planning-devkit/core .agents/skills/feature-planner/
+cp -r /path/to/Agentic-Feature-Planning-DevKit/adapters/antigravity/* .agents/skills/feature-planner/
+cp -r /path/to/Agentic-Feature-Planning-DevKit/core .agents/skills/feature-planner/
 ```
 
 ---

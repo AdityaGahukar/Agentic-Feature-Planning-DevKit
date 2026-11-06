@@ -4,7 +4,7 @@
 # Installs the feature-planner skill and portable core into your active project.
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/<your-org>/agentic-feature-planning-devkit/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/AdityaGahukar/Agentic-Feature-Planning-DevKit/main/install.sh | bash
 #   OR from a local clone:
 #   ./install.sh
 #
@@ -27,7 +27,7 @@ if [ -n "$SCRIPT_DIR" ] && [ -d "$SCRIPT_DIR/core" ] && [ -d "$SCRIPT_DIR/adapte
 else
     echo "🌐 Downloading latest release from GitHub..."
     TMP_DIR=$(mktemp -d)
-    git clone --depth 1 https://github.com/<your-org>/agentic-feature-planning-devkit.git "$TMP_DIR/devkit" 2>/dev/null
+    git clone --depth 1 https://github.com/AdityaGahukar/Agentic-Feature-Planning-DevKit.git "$TMP_DIR/devkit" 2>/dev/null
     cp -r "$TMP_DIR/devkit/adapters/antigravity/"* "$TARGET_DIR/"
     cp -r "$TMP_DIR/devkit/core" "$TARGET_DIR/"
     rm -rf "$TMP_DIR"
