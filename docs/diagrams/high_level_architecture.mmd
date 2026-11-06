@@ -1,0 +1,79 @@
+flowchart TB
+    subgraph DevLayer["Developer & Interaction"]
+        User["Developer / Human Engineer"]
+        ChatInterface["Chat / CLI Interface"]
+    end
+
+    subgraph AdapterLayer["Harness Adapter Layer (Host-Specific)"]
+        AGYSuffix["Antigravity Skill Adapter<br/>(SKILL.md & handler.md)"]
+        GenericContract["Generic Harness Contract<br/>(adapters/generic_contract.md)"]
+    end
+
+    subgraph CoreEngine["Portable Core Planning Engine (Harness-Agnostic)"]
+        Orchestrator["Master Orchestrator (orchestrator.md)<br/>Algorithm 1 (Pipeline) & Algorithm 3 (Recovery)"]
+        
+        subgraph Stages["8-Stage Execution Pipeline"]
+            S1["Stage 1: Intake & Slug"]
+            S2["Stage 2: Reconnaissance"]
+            S3["Stage 3: Architecture & Conventions"]
+            S4["Stage 4: Feature Specification"]
+            S5["Stage 5: Impact & Risk"]
+            S6["Stage 6: Task Decomposition"]
+            S7["Stage 7: Validation Planning"]
+            S8["Stage 8: Quality Gates & Blueprints"]
+        end
+
+        subgraph Rubrics["Formal Rubrics & Intelligence"]
+            EvidenceRubric["Evidence Rubric<br/>(Tiers 1-4: Evidence to Ambiguity)"]
+            RepoMatrix["Repository Classification Matrix<br/>(App, Lib, Data, Infra, Monorepo)"]
+        end
+
+        subgraph QualityGateRules["Quality Gate Rules"]
+            HardGates["Hard Gates (QG-H1..H5)<br/>Path Grounding, Acyclic DAG,<br/>FR-to-Task, AC-to-TC, Zero Mutation"]
+            SoftGates["Soft Gates (QG-S1..S4)<br/>Questions, Complexity, Risk, Notes"]
+        end
+    end
+
+    subgraph FileSystem["Target Repository Filesystem (Workspace Root)"]
+        subgraph TargetCodebase["Target Application Codebase (Read-Only)"]
+            SrcCode["Source Code (*.ts, *.py, *.go, etc.)"]
+            Manifests["Manifests (package.json, dbt, etc.)"]
+            ExistingTests["Existing Tests & Configurations"]
+        end
+
+        subgraph DevKitSandbox["DevKit Sandbox (Isolated Write Access: .devkit/)"]
+            subgraph CheckpointStore["Intermediate State (.devkit/run-state/)"]
+                StateFiles["intake.md, repo-map.md, repo-type.md<br/>architecture.md, conventions.md, stage-log.md"]
+            end
+
+            subgraph BlueprintStore["Persistent Outputs (.devkit/plans/feature-slug/)"]
+                BP1["feature-spec.md"]
+                BP2["implementation-plan.md"]
+                BP3["task-breakdown.md"]
+                BP4["validation-plan.md"]
+                BP5["decisions.md"]
+                BP6["run-summary.md"]
+                BP7["plan-run.log"]
+            end
+        end
+    end
+
+    %% Wiring
+    User <--> ChatInterface
+    ChatInterface <--> AGYSuffix
+    AGYSuffix -.-> GenericContract
+    AGYSuffix --> Orchestrator
+
+    Orchestrator --> S1
+    S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7 --> S8
+
+    S1 & S3 & S4 -.-> EvidenceRubric
+    S2 -.-> RepoMatrix
+    S8 -.-> HardGates
+    S8 -.-> SoftGates
+
+    S2 & S3 -- "Read-Only Inspection" --> TargetCodebase
+    S1 & S2 & S3 -- "Save Checkpoints" --> CheckpointStore
+    Orchestrator -- "Resumption Check" --> CheckpointStore
+    S4 & S5 & S6 & S7 & S8 -- "Generate Artifacts" --> BlueprintStore
+    S8 -- "Promote Log & Purge" --> CheckpointStore

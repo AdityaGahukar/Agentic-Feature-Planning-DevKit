@@ -1,0 +1,55 @@
+sequenceDiagram
+    autonumber
+    actor Dev as Developer
+    participant Host as Antigravity Adapter (Host Harness)
+    participant Core as Portable Core Orchestrator
+    participant Repo as Target Repository (Read-Only)
+    participant RunState as Checkpoint Store (.devkit/run-state/)
+    participant Blueprint as Blueprint Directory (.devkit/plans/feature-slug/)
+
+    Dev->>Host: Invoke Feature Planner ("Add retry handling to payment API")
+    Host->>Core: Launch Orchestrator with extracted parameters
+    
+    activate Core
+    Core->>RunState: Resumption Check (Algorithm 3)
+    RunState-->>Core: No prior checkpoint found
+
+    %% Stage 1
+    Core->>RunState: Write intake.md (Slug & parameters)
+    opt Critical Ambiguity Detected (Tier 4)
+        Core->>Host: Relay batched questions (max 5)
+        Host->>Dev: Prompt developer in chat with questions
+        Dev->>Host: Developer submits answers
+        Host->>Core: Return answers
+        Core->>RunState: Update intake.md with user answers
+    end
+
+    %% Stage 2
+    Core->>Repo: 4-Pass Read-Only Scan (Manifests, structure, imports)
+    Repo-->>Core: File contents & directory tree
+    Core->>RunState: Write repo-map.md & repo-type.md
+
+    %% Stage 3
+    Core->>Repo: Deep inspect sampled files (Max 50 files)
+    Repo-->>Core: Source code idioms & patterns
+    Core->>RunState: Write architecture.md & conventions.md
+
+    %% Stage 4 to 7
+    Core->>Blueprint: Write feature-spec.md (US, FR, AC)
+    Core->>Blueprint: Write implementation-plan.md (Blast radius & technical approach)
+    Core->>Blueprint: Write task-breakdown.md (Phased tasks & Mermaid DAG)
+    Core->>Blueprint: Write validation-plan.md (100% AC to TC test mapping)
+
+    %% Stage 8
+    Core->>Core: Evaluate Quality Gates (QG-H1..H5 & QG-S1..S4)
+    Core->>Blueprint: Write decisions.md (ADRs & Assumptions)
+    Core->>Blueprint: Write run-summary.md (Gate results & status)
+    Core->>RunState: Read stage-log.md
+    RunState-->>Core: Full stage execution log
+    Core->>Blueprint: Write plan-run.log (Promoted from stage-log)
+    Core->>RunState: Purge temporary run-state files
+    
+    Core-->>Host: Execution completed with status (approved/draft)
+    deactivate Core
+
+    Host->>Dev: Deliver response with summary & clickable file:// links

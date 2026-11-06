@@ -1,0 +1,78 @@
+classDiagram
+    direction TB
+
+    class FeatureSpec {
+        +US_xxx: User Stories
+        +FR_xxx: Functional Requirements
+        +AC_xxx: Acceptance Criteria
+        +NFR_xxx: Non-Functional Requirements
+        +Scope_In_Out: Boundary definitions
+        +AS_xxx: Evidence-backed assumptions
+        +OQ_xxx: Open questions
+    }
+
+    class ImplementationPlan {
+        +TechApproach: Architecture strategy
+        +BlastRadius: Touched files & [NEW FILE]
+        +DataMigrations: Schema / state changes
+        +RiskRegister: RISK-xxx with mitigations
+        +PhasesOverview: Phase 1..N summary
+    }
+
+    class TaskBreakdown {
+        +TASK_xxx: Atomic task cards
+        +TaskMetadata: Type, Complexity S/M/L/XL
+        +TargetFiles: Grounded paths / [NEW FILE]
+        +MermaidDAG: Acyclic dependency graph
+        +Instructions: Concrete action steps
+        +Verification: Local check command
+    }
+
+    class ValidationPlan {
+        +TestFramework: Detected runner command
+        +TC_xxx: Test case specifications
+        +Preconditions: State setup
+        +TestSteps: Execution steps
+        +ExpectedResult: Binary pass/fail assertion
+        +MockSpecs: Necessary mocks & stubs
+    }
+
+    class Decisions {
+        +ADR_xxx: Architecture Decision Records
+        +Tradeoffs: Context, Alternatives, Rejected
+        +AS_xxx: Complete assumption register
+        +OQ_xxx: Unresolved questions & fallbacks
+    }
+
+    class RunSummary {
+        +ExecutionMetadata: Slug, Duration, Archetype
+        +QualityGates: QG-H1..H5 and QG-S1..S4
+        +FinalStatus: approved | draft | incomplete
+        +KeyDecisions: Highlights from decisions.md
+    }
+
+    class PlanRunLog {
+        +StageHistory: Promoted from stage-log.md
+        +Timestamps: ISO execution timestamps
+        +StatusTransitions: COMPLETED, FAILED
+    }
+
+    %% Traceability Relationships
+    FeatureSpec "FR-xxx" --> "mapped to" TaskBreakdown : "Implemented by TASK-xxx (QG-H3)"
+    FeatureSpec "AC-xxx" --> "verified by" ValidationPlan : "Verified by TC-xxx (QG-H4)"
+    FeatureSpec "AS-xxx" --> "formalized in" Decisions : "Registered as AS-xxx"
+    FeatureSpec "OQ-xxx" --> "recorded in" Decisions : "Captured as OQ-xxx (QG-S1)"
+    
+    ImplementationPlan "RISK-xxx" --> "informs" TaskBreakdown : "Mitigations built into tasks"
+    ImplementationPlan "BlastRadius" --> "grounds" TaskBreakdown : "Validates file paths (QG-H1)"
+
+    Decisions "ADR-xxx" --> "justifies" ImplementationPlan : "Architectural choices"
+    
+    TaskBreakdown "MermaidDAG" --> "enforces" TaskBreakdown : "Acyclicity via Kahn's sort (QG-H2)"
+
+    RunSummary "GateAudit" --> FeatureSpec : "Audits FR / AC completeness"
+    RunSummary "GateAudit" --> TaskBreakdown : "Audits DAG acyclicity & grounding"
+    RunSummary "GateAudit" --> ValidationPlan : "Audits test mapping"
+    RunSummary "GateAudit" --> Decisions : "Audits ADR & assumption coverage"
+
+    PlanRunLog "AuditTrail" --> RunSummary : "Historical stage log record"

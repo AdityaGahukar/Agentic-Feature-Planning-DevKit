@@ -1,0 +1,57 @@
+stateDiagram-v2
+    [*] --> CheckpointCheck: Invocation with (repo, statement)
+
+    state CheckpointCheck {
+        direction TB
+        InspectRunState: Read .devkit/run-state/stage-log.md
+        HashValidation: Compute SHA-256 of feature statement
+        InspectRunState --> HashValidation
+    }
+
+    CheckpointCheck --> NewRun: stage-log.md absent
+    CheckpointCheck --> HashMismatch: stage-log.md exists BUT hash mismatch
+    CheckpointCheck --> ValidResumption: stage-log.md exists AND hash matches
+
+    state HashMismatch {
+        PurgeOld: Purge stale .devkit/run-state/*
+        LogWarning: Log state mismatch warning
+        PurgeOld --> LogWarning
+    }
+    HashMismatch --> NewRun
+
+    state NewRun {
+        Stage1: Stage 1 Intake -> write intake.md & stage-log.md
+    }
+
+    state ValidResumption {
+        DetectStage: Find last stage with status COMPLETED
+        FastForward: Skip completed stages without re-running
+        DetectStage --> FastForward
+    }
+
+    NewRun --> PipelineExecution
+    ValidResumption --> PipelineExecution: Resume at first non-completed stage
+
+    state PipelineExecution {
+        Stage2: Stage 2 Recon -> write repo-map.md, repo-type.md
+        Stage3: Stage 3 Arch -> write architecture.md, conventions.md
+        Stage4To7: Stages 4-7 Planning -> write Blueprints in .devkit/plans/<slug>/
+        Stage8: Stage 8 Gates -> evaluate QG-H1..H5 & QG-S1..S4
+        
+        Stage2 --> Stage3
+        Stage3 --> Stage4To7
+        Stage4To7 --> Stage8
+    }
+
+    PipelineExecution --> Interruption: Session terminates / Quota cut / Timeout
+    Interruption --> [*]: Checkpoints safely preserved on disk
+
+    PipelineExecution --> RunSuccess: Stage 8 Completes
+    
+    state RunSuccess {
+        PromoteLog: Promote stage-log.md to .devkit/plans/<slug>/plan-run.log
+        CleanRunState: Purge temporary files in .devkit/run-state/
+        PromoteLog --> CleanRunState
+    }
+
+    RunSuccess --> [*]: Complete Blueprint Ready for Execution

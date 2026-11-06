@@ -1,0 +1,38 @@
+flowchart TD
+    Start(["Developer has a Feature Idea / Requirement"]) --> ObtainDevKit["Obtain DevKit Repository<br/>(Local Copy or Workspace Skill)"]
+    ObtainDevKit --> OpenWorkspace["Open Target Repository in Antigravity"]
+    OpenWorkspace --> ConfigureSkill["Load Feature Planner Skill<br/>(.agents/skills/feature-planner/ or Global)"]
+    ConfigureSkill --> InvokeDevKit["Invoke Feature Planner with Problem Statement<br/>('Plan feature: Add retry handling to payment API')"]
+
+    InvokeDevKit --> ResumptionCheck{"Interrupted run exists in<br/>.devkit/run-state/?<br/>(Algorithm 3)"}
+    ResumptionCheck -- "Yes & Hash matches" --> ResumeState["Resume execution from last<br/>completed stage checkpoint"]
+    ResumptionCheck -- "Yes & Hash differs" --> PurgeStale["Purge stale run-state<br/>and start fresh run"]
+    ResumptionCheck -- "No run-state" --> Stage1Intake["Stage 1: Intake, Slug Generation<br/>& Ambiguity Evaluation"]
+    PurgeStale --> Stage1Intake
+
+    Stage1Intake --> AmbiguityCheck{"Critical Ambiguity<br/>detected in Tier 4?"}
+    AmbiguityCheck -- "Yes (Max 1 pause, up to 5 questions)" --> QAPause["Interactive Q&A Pause in Chat<br/>(Presents options + defaults)"]
+    QAPause --> UserAnswers["Developer provides answers<br/>(or accepts defaults)"]
+    UserAnswers --> SaveIntake["Record answers into<br/>.devkit/run-state/intake.md"]
+    SaveIntake --> Stage2Recon
+
+    AmbiguityCheck -- "No Critical Ambiguity" --> Stage2Recon["Stage 2: Reconnaissance &<br/>Archetype Detection"]
+    ResumeState --> Stage2Recon
+
+    Stage2Recon --> Stage3Arch["Stage 3: Architecture &<br/>Convention Extraction"]
+    Stage3Arch --> Stage4Spec["Stage 4: Feature Specification<br/>(US, FR, AC items)"]
+    Stage4Spec --> Stage5Impact["Stage 5: Impact & Risk Analysis<br/>(Blast radius, Risk Register)"]
+    Stage5Impact --> Stage6Tasks["Stage 6: Task Decomposition &<br/>Mermaid DAG Generation"]
+    Stage6Tasks --> Stage7Valid["Stage 7: Validation Planning<br/>(100% AC to TC Mapping)"]
+    Stage7Valid --> Stage8Gates["Stage 8: Deterministic Quality Gates<br/>(QG-H1..H5 & QG-S1..S4)"]
+
+    Stage8Gates --> GateEvaluation{"All Hard Gates<br/>(QG-H1..H5) PASS?"}
+    GateEvaluation -- "FAIL" --> FlagDraft["Status marked as 'draft' / 'incomplete'<br/>Logs issues in run-summary.md"]
+    GateEvaluation -- "PASS" --> FlagApproved["Status marked as 'approved'<br/>Promote run-state & cleanup"]
+    
+    FlagDraft --> FinalPresentation["Deliver Completion Summary with<br/>file:// links to Blueprint"]
+    FlagApproved --> FinalPresentation
+
+    FinalPresentation --> DeveloperReview["Developer Reviews Generated Blueprint<br/>(.devkit/plans/feature-slug/)"]
+    DeveloperReview --> ImplementationStage["Pass Blueprint Tasks to Coding Agent / Human<br/>for Isolated Implementation Phase"]
+    ImplementationStage --> Done(["Feature Built & Verified against ACs"])

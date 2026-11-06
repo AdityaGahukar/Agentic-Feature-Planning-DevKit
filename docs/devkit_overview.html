@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic Feature Planning DevKit — Technical Overview</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.8/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+  <style>
+    :root {
+      --primary: #1a73e8;
+      --primary-dark: #1557b0;
+      --bg-main: #f8f9fa;
+      --surface: #ffffff;
+      --text: #202124;
+      --text-secondary: #5f6368;
+      --border: #dadce0;
+      --code-bg: #f1f3f4;
+      --badge-green: #e6f4ea;
+      --badge-green-text: #137333;
+      --badge-blue: #e8f0fe;
+      --badge-blue-text: #1a73e8;
+      --badge-amber: #fef7e0;
+      --badge-amber-text: #b06000;
+      --nav-width: 280px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background-color: var(--bg-main);
+      line-height: 1.6;
+      display: flex;
+    }
+
+    /* Sidebar Navigation */
+    nav.sidebar {
+      width: var(--nav-width);
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 16px;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    .brand {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .version-tag {
+      font-size: 0.75rem;
+      background: var(--badge-blue);
+      color: var(--badge-blue-text);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+    nav.sidebar ul { list-style: none; }
+    nav.sidebar li { margin-bottom: 6px; }
+    nav.sidebar a {
+      display: block;
+      padding: 6px 12px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    nav.sidebar a:hover {
+      background: var(--code-bg);
+      color: var(--primary);
+    }
+
+    /* Main Content */
+    main.content {
+      flex: 1;
+      padding: 48px 64px;
+      max-width: 1100px;
+    }
+
+    section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+      margin-bottom: 40px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    h1, h2, h3, h4 { color: var(--text); margin-bottom: 16px; font-weight: 600; }
+    h1 { font-size: 2.2rem; margin-bottom: 24px; line-height: 1.25; }
+    h2 { font-size: 1.5rem; border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-top: 8px; }
+    h3 { font-size: 1.2rem; margin-top: 20px; }
+    p { margin-bottom: 16px; color: var(--text); }
+    ul, ol { margin-left: 24px; margin-bottom: 16px; }
+    li { margin-bottom: 8px; }
+
+    /* Code & Callouts */
+    pre, code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88rem;
+    }
+    code {
+      background: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    pre {
+      background: #202124;
+      color: #f1f3f4;
+      padding: 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+    pre code { background: none; color: inherit; padding: 0; }
+
+    .callout {
+      border-left: 4px solid var(--primary);
+      background: var(--badge-blue);
+      color: var(--primary-dark);
+      padding: 16px;
+      border-radius: 0 6px 6px 0;
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+    }
+    .callout-amber {
+      border-left-color: var(--badge-amber-text);
+      background: var(--badge-amber);
+      color: #794a00;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 24px;
+      font-size: 0.92rem;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+    }
+    th {
+      background-color: var(--code-bg);
+      font-weight: 600;
+    }
+
+    /* Diagram containers */
+    .diagram-container {
+      background: #fafbfc;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+    .diagram-caption {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .badge-green { background: var(--badge-green); color: var(--badge-green-text); }
+    .badge-amber { background: var(--badge-amber); color: var(--badge-amber-text); }
+    .badge-blue { background: var(--badge-blue); color: var(--badge-blue-text); }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 900px) {
+      body { flex-direction: column; }
+      nav.sidebar { width: 100%; height: auto; position: static; }
+      main.content { padding: 24px 20px; }
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="brand">
+      DevKit Architecture
+      <span class="version-tag">v0.2.0</span>
+    </div>
+    <ul>
+      <li><a href="#what-is-it">1. What is the DevKit?</a></li>
+      <li><a href="#problem-solved">2. Problem It Solves</a></li>
+      <li><a href="#key-capabilities">3. Key Capabilities</a></li>
+      <li><a href="#user-flow">4. Developer User Flow</a></li>
+      <li><a href="#architecture">5. High-Level Architecture</a></li>
+      <li><a href="#planning-engine">6. 8-Stage Planning Pipeline</a></li>
+      <li><a href="#agent-sequence">7. Agent Execution Sequence</a></li>
+      <li><a href="#blueprint-artifacts">8. Blueprint Deliverables</a></li>
+      <li><a href="#repo-intelligence">9. Evidence-Based Intelligence</a></li>
+      <li><a href="#harness-independence">10. Harness Independence</a></li>
+      <li><a href="#checkpoint-recovery">11. Checkpoint & Recovery</a></li>
+      <li><a href="#quality-gates">12. Deterministic Quality Gates</a></li>
+      <li><a href="#scope-limits">13. Scope & Limitations</a></li>
+      <li><a href="#getting-started">14. How to Get Started</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="content">
+
+    <!-- Header Section -->
+    <header style="margin-bottom: 40px;">
+      <h1>Agentic Feature Planning DevKit</h1>
+      <p style="font-size: 1.15rem; color: var(--text-secondary);">
+        A portable, evidence-driven planning engine for agentic workflows. Generates complete, repository-aware implementation blueprints without modifying application code.
+      </p>
+      <div style="display: flex; gap: 12px; margin-top: 16px;">
+        <span class="badge badge-green">MVP Verified (29/29 Tests Passing)</span>
+        <span class="badge badge-blue">Zero External Runtime Dependencies</span>
+        <span class="badge badge-amber">Strict Non-Mutation Guarantee</span>
+      </div>
+    </header>
+
+    <!-- 1. What is it? -->
+    <section id="what-is-it">
+      <h2>1. What is the Agentic Feature Planning DevKit?</h2>
+      <p>
+        The <strong>Agentic Feature Planning DevKit</strong> is an autonomous, repository-aware framework designed to solve the critical "planning gap" in agentic software engineering.
+      </p>
+      <p>
+        When developers give an AI agent a feature problem statement (e.g., <em>"Add retry handling to payment API"</em>), agents often rush to modify code immediately, causing hallucinated paths, broken conventions, circular dependencies, and regressed tests.
+      </p>
+      <p>
+        The DevKit inserts a rigorous, automated planning phase prior to code modification. It inspects the codebase, classifies the repository archetype, extracts empirical conventions, breaks the feature down into a dependency-ordered directed acyclic graph (DAG), generates explicit validation specifications, and subjects the entire plan to deterministic quality gates.
+      </p>
+      <div class="callout">
+        <strong>Core Philosophy:</strong> The DevKit separates <em>planning</em> from <em>implementation</em>. It creates a self-contained, reproducible <strong>Blueprint</strong> under <code>.devkit/plans/&lt;feature-slug&gt;/</code> inside the target repository that any engineer or subsequent agent session can execute with zero ambiguity.
+      </div>
+    </section>
+
+    <!-- 2. Problem It Solves -->
+    <section id="problem-solved">
+      <h2>2. Problem It Solves</h2>
+      <div class="grid-2">
+        <div style="background: #fdf2f2; border: 1px solid #f5c6cb; padding: 20px; border-radius: 6px;">
+          <h4 style="color: #721c24;">Without DevKit (Ad-Hoc Agent Coding)</h4>
+          <ul style="color: #721c24; margin-bottom: 0;">
+            <li>Jumps immediately into writing code.</li>
+            <li>Hallucinates non-existent modules or file paths.</li>
+            <li>Invents new coding styles ignoring existing conventions.</li>
+            <li>Produces circular, un-orderable implementation steps.</li>
+            <li>Lacks acceptance criteria and automated test mappings.</li>
+            <li>Fails mid-way when context runs out or sessions reset.</li>
+          </ul>
+        </div>
+        <div style="background: #e6f4ea; border: 1px solid #c3e6cb; padding: 20px; border-radius: 6px;">
+          <h4 style="color: #155724;">With DevKit (Structured Planning)</h4>
+          <ul style="color: #155724; margin-bottom: 0;">
+            <li>Enforces read-only repository inspection before planning.</li>
+            <li>100% path grounding against disk inventory (QG-H1).</li>
+            <li>Empirical 7-dimension convention extraction.</li>
+            <li>Topologically sorted DAG verified via Kahn's algorithm (QG-H2).</li>
+            <li>100% bidirectional traceability from FRs to Tasks and Tests.</li>
+            <li>Fresh-session resume via persistent checkpoints in <code>.devkit/</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Key Capabilities -->
+    <section id="key-capabilities">
+      <h2>3. Key Capabilities</h2>
+      <ul>
+        <li><strong>Single-Agent Autonomous Pipeline:</strong> Advances through all 8 planning stages without needing repetitive human confirmations between stages.</li>
+        <li><strong>Strict Source Code Non-Mutation:</strong> Planning writes exclusively to <code>.devkit/</code>. Zero source files, tests, or build outputs are modified.</li>
+        <li><strong>Deterministic Quality Gates:</strong> Hard gates (path grounding, acyclicity, traceability, non-mutation) fail the run if hallucinated or invalid.</li>
+        <li><strong>Multi-Archetype Intelligence:</strong> Automatically classifies codebases into App, Library, Data Engineering, Infrastructure, Monorepo, or Unknown.</li>
+        <li><strong>Portable, Zero-Binary Architecture:</strong> Core planning logic consists of pure Markdown instructions, schemas, and rubrics. Runs on standard LLM toolkits.</li>
+        <li><strong>Session & History Independence:</strong> Interrupted runs resume cleanly from disk checkpoints without conversational context.</li>
+      </ul>
+    </section>
+
+    <!-- 4. Developer User Flow -->
+    <section id="user-flow">
+      <h2>4. Developer User Flow</h2>
+      <p>The journey from developer feature intent to executable Blueprint:</p>
+      <div class="diagram-container">
+        <pre class="mermaid">
+flowchart TD
+    Start(["Developer has a Feature Requirement"]) --> OpenWorkspace["Open Target Repository in Antigravity"]
+    OpenWorkspace --> LoadSkill["Load Feature Planner Skill (.agents/skills/feature-planner/)"]
+    LoadSkill --> Invoke["Invoke Feature Planner with Problem Statement"]
+    
+    Invoke --> CheckState{"Prior Run-State in<br/>.devkit/run-state/?"}
+    CheckState -- "Hash Match" --> Resume["Resume from last completed stage"]
+    CheckState -- "No State / Mismatch" --> S1["Stage 1: Intake & Slug Generation"]
+    Resume --> S2["Stage 2: Reconnaissance"]
+    
+    S1 --> Ambiguity{"Critical Ambiguity<br/>(Tier 4)?"}
+    Ambiguity -- "Yes (Max 1 pause, up to 5 questions)" --> QAPause["Interactive Q&A Pause in Chat"]
+    QAPause --> UserAnswers["Developer answers questions"]
+    UserAnswers --> S2
+    Ambiguity -- "No" --> S2
+
+    S2 --> S3["Stage 3: Architecture & Conventions"]
+    S3 --> S4["Stage 4: Feature Specification (US, FR, AC)"]
+    S4 --> S5["Stage 5: Impact & Risk Analysis"]
+    S5 --> S6["Stage 6: Task Decomposition & Mermaid DAG"]
+    S6 --> S7["Stage 7: Validation Planning (100% AC to TC)"]
+    S7 --> S8["Stage 8: Quality Gates & Deliverable Finalization"]
+    
+    S8 --> GateCheck{"All Hard Gates<br/>Pass (QG-H1..H5)?"}
+    GateCheck -- "PASS" --> Approved["Status: Approved. Promote Plan & Purge Run-State"]
+    GateCheck -- "FAIL" --> Draft["Status: Draft. Flag violations in run-summary.md"]
+    
+    Approved --> Present["Deliver Summary & Clickable file:// Links"]
+    Draft --> Present
+    Present --> Execution["Pass Blueprint to Coding Agent or Engineer to Implement"]
+        </pre>
+      </div>
+      <div class="diagram-caption">Source: <code>docs/diagrams/developer_user_flow.mmd</code></div>
+    </section>
+
+    <!-- 5. High-Level Architecture -->
+    <section id="architecture">
+      <h2>5. High-Level Architecture</h2>
+      <p>The DevKit cleanly separates the host-specific harness adapter from the portable core planning engine:</p>
+      <div class="diagram-container">
+        <pre class="mermaid">
+flowchart TB
+    subgraph DevLayer["Developer & Harness Interface"]
+        User["Developer / Human Engineer"]
+        ChatInterface["Chat / CLI Tooling"]
+    end
+
+    subgraph AdapterLayer["Harness Adapter Layer (Host-Specific)"]
+        AGYSuffix["Antigravity Skill Adapter<br/>(SKILL.md & handler.md)"]
+        GenericContract["Generic Adapter Contract<br/>(adapters/generic_contract.md)"]
+    end
+
+    subgraph CoreEngine["Portable Core Planning Engine (Harness-Agnostic)"]
+        Orchestrator["Master Orchestrator (orchestrator.md)<br/>State Machine & Resumption Protocol"]
+        Stages["8-Stage Execution Pipeline (core/stages/)"]
+        Rubrics["Evidence Rubric & Repo Classification Matrix (core/rubrics/)"]
+        GateLogic["Deterministic Hard & Soft Quality Gates"]
+    end
+
+    subgraph TargetRepo["Target Repository Workspace (Workspace Root)"]
+        subgraph ReadOnlyCodebase["Application Codebase (Read-Only)"]
+            Src["Source Code, Manifests & Existing Tests"]
+        end
+        subgraph DevKitSandbox["DevKit Sandbox (.devkit/)"]
+            RunState["Intermediate Checkpoints (.devkit/run-state/)<br/>intake.md, repo-map.md, architecture.md, stage-log.md"]
+            Blueprints["Persistent Blueprints (.devkit/plans/feature-slug/)<br/>feature-spec.md, task-breakdown.md, etc."]
+        end
+    end
+
+    User <--> ChatInterface
+    ChatInterface <--> AGYSuffix
+    AGYSuffix -.-> GenericContract
+    AGYSuffix --> Orchestrator
+    Orchestrator --> Stages
+    Stages -.-> Rubrics
+    Stages -.-> GateLogic
+    Stages -- "Read-Only Inspection" --> ReadOnlyCodebase
+    Stages -- "Checkpoint Read/Write" --> RunState
+    Stages -- "Deliverable Generation" --> Blueprints
+        </pre>
+      </div>
+      <div class="diagram-caption">Source: <code>docs/diagrams/high_level_architecture.mmd</code></div>
+    </section>
+
+    <!-- 6. 8-Stage Planning Pipeline -->
+    <section id="planning-engine">
+      <h2>6. Eight-Stage Planning Pipeline</h2>
+      <p>Every planning run advances sequentially through 8 discrete stages:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Stage</th>
+            <th>Name</th>
+            <th>Primary Objective</th>
+            <th>Output Artifact</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Stage 1</strong></td>
+            <td>Intake & Clarification</td>
+            <td>Validate inputs, generate URL-safe slug, check collisions, filter Critical Ambiguities (Tier 4).</td>
+            <td><code>.devkit/run-state/intake.md</code></td>
+          </tr>
+          <tr>
+            <td><strong>Stage 2</strong></td>
+            <td>Repository Reconnaissance</td>
+            <td>4-pass read-only scan of manifests, directory layout, and test framework; score archetype points.</td>
+            <td><code>repo-map.md</code>, <code>repo-type.md</code></td>
+          </tr>
+          <tr>
+            <td><strong>Stage 3</strong></td>
+            <td>Architecture & Conventions</td>
+            <td>Empirically extract 7 convention dimensions (file naming, layout, error idioms, etc.) with code samples.</td>
+            <td><code>architecture.md</code>, <code>conventions.md</code></td>
+          </tr>
+          <tr>
+            <td><strong>Stage 4</strong></td>
+            <td>Feature Specification</td>
+            <td>Synthesize user stories (US), functional requirements (FR), testable acceptance criteria (AC), and scope.</td>
+            <td><code>.devkit/plans/&lt;feature-slug&gt;/feature-spec.md</code></td>
+          </tr>
+          <tr>
+            <td><strong>Stage 5</strong></td>
+            <td>Impact & Risk Analysis</td>
+            <td>Compute blast radius, map affected components, tag <code>[NEW FILE]</code> paths, and populate Risk Register.</td>
+            <td><code>implementation-plan.md</code> (Section 1)</td>
+          </tr>
+          <tr>
+            <td><strong>Stage 6</strong></td>
+            <td>Task Decomposition & DAG</td>
+            <td>Decompose into atomic <code>TASK-xxx</code> cards with grounded paths; wire Mermaid flowchart DAG.</td>
+            <td><code>task-breakdown.md</code></td>
+          </tr>
+          <tr>
+            <td><strong>Stage 7</strong></td>
+            <td>Validation Planning</td>
+            <td>Map 100% of <code>AC-xxx</code> items to explicit <code>TC-xxx</code> test specs aligned with detected test framework.</td>
+            <td><code>validation-plan.md</code></td>
+          </tr>
+          <tr>
+            <td><strong>Stage 8</strong></td>
+            <td>Quality Gates & Finalization</td>
+            <td>Execute Hard Gates (QG-H1..H5) and Soft Gates; write <code>decisions.md</code> and <code>run-summary.md</code>; promote log and purge run-state.</td>
+            <td><code>decisions.md</code>, <code>run-summary.md</code>, <code>plan-run.log</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="diagram-caption">Full pipeline breakdown available in <code>docs/diagrams/planning_workflow.mmd</code></div>
+    </section>
+
+    <!-- 7. Agent Execution Sequence -->
+    <section id="agent-sequence">
+      <h2>7. Agent Execution Sequence</h2>
+      <p>Demonstrates the runtime interaction between Developer, Adapter, Core Engine, Target Repository, and Checkpoint Store:</p>
+      <div class="diagram-container">
+        <pre class="mermaid">
+sequenceDiagram
+    autonumber
+    actor Dev as Developer
+    participant Host as Antigravity Adapter
+    participant Core as Portable Core Orchestrator
+    participant Repo as Target Repository (Read-Only)
+    participant RunState as Checkpoint Store (.devkit/run-state/)
+    participant Blueprint as Blueprint Directory (.devkit/plans/feature-slug/)
+
+    Dev->>Host: Invoke Feature Planner ("Add retry handling to payment API")
+    Host->>Core: Launch Orchestrator with extracted parameters
+    
+    activate Core
+    Core->>RunState: Resumption Check (Algorithm 3)
+    RunState-->>Core: No prior checkpoint found
+
+    Core->>RunState: Stage 1 -> Write intake.md
+    opt Critical Ambiguity Detected
+        Core->>Host: Relay batched questions (max 5)
+        Host->>Dev: Present questions in chat
+        Dev->>Host: Provide answers
+        Host->>Core: Resume with answers
+        Core->>RunState: Update intake.md
+    end
+
+    Core->>Repo: Stage 2 -> 4-Pass Read-Only Scan
+    Repo-->>Core: Directory tree & manifests
+    Core->>RunState: Write repo-map.md & repo-type.md
+
+    Core->>Repo: Stage 3 -> Deep inspect sampled files (Max 50)
+    Repo-->>Core: Coding patterns & conventions
+    Core->>RunState: Write architecture.md & conventions.md
+
+    Core->>Blueprint: Stage 4 -> Write feature-spec.md (US, FR, AC)
+    Core->>Blueprint: Stage 5 -> Write implementation-plan.md (Blast radius & risks)
+    Core->>Blueprint: Stage 6 -> Write task-breakdown.md (Tasks & Mermaid DAG)
+    Core->>Blueprint: Stage 7 -> Write validation-plan.md (AC-to-TC test specs)
+
+    Core->>Core: Stage 8 -> Evaluate Hard Quality Gates (QG-H1..H5)
+    Core->>Blueprint: Write decisions.md & run-summary.md
+    Core->>RunState: Read stage-log.md
+    RunState-->>Core: Full stage log
+    Core->>Blueprint: Write plan-run.log
+    Core->>RunState: Purge temporary run-state files
+    
+    Core-->>Host: Execution completed (Status: approved)
+    deactivate Core
+
+    Host->>Dev: Deliver completion summary with clickable file:// links
+        </pre>
+      </div>
+      <div class="diagram-caption">Source: <code>docs/diagrams/execution_sequence.mmd</code></div>
+    </section>
+
+    <!-- 8. Blueprint Deliverables -->
+    <section id="blueprint-artifacts">
+      <h2>8. Blueprint Deliverables & Traceability</h2>
+      <p>
+        Upon completion, all persistent artifacts reside under <code>.devkit/plans/feature-slug/</code>. Every deliverable maintains strict bidirectional traceability:
+      </p>
+      <div class="diagram-container">
+        <pre class="mermaid">
+classDiagram
+    direction TB
+    class FeatureSpec {
+        +US_xxx: User Stories
+        +FR_xxx: Functional Requirements
+        +AC_xxx: Acceptance Criteria
+        +AS_xxx: Evidence Assumptions
+        +OQ_xxx: Open Questions
+    }
+    class TaskBreakdown {
+        +TASK_xxx: Phased Tasks
+        +MermaidDAG: Acyclic Graph
+        +TargetFiles: Grounded Paths
+    }
+    class ValidationPlan {
+        +TC_xxx: Test Specifications
+        +TestRunner: Exact CLI command
+    }
+    class ImplementationPlan {
+        +BlastRadius: Touched vs [NEW FILE]
+        +RiskRegister: RISK-xxx
+    }
+    class Decisions {
+        +ADR_xxx: Architecture Decisions
+        +AS_xxx: Assumptions Register
+    }
+    class RunSummary {
+        +QualityGates: QG-H1..H5
+        +FinalStatus: approved | draft
+    }
+
+    FeatureSpec "FR-xxx" --> "mapped to" TaskBreakdown : "Implemented by TASK-xxx (QG-H3)"
+    FeatureSpec "AC-xxx" --> "verified by" ValidationPlan : "Tested by TC-xxx (QG-H4)"
+    FeatureSpec "AS-xxx" --> "registered in" Decisions : "Documented as AS-xxx"
+    ImplementationPlan "BlastRadius" --> "grounds" TaskBreakdown : "Validates file paths (QG-H1)"
+    TaskBreakdown "MermaidDAG" --> "verified by" RunSummary : "Kahn's Sort (QG-H2)"
+    RunSummary "AuditGate" --> FeatureSpec : "Audits completeness"
+        </pre>
+      </div>
+      <div class="diagram-caption">Source: <code>docs/diagrams/blueprint_artifact_relationship.mmd</code></div>
+    </section>
+
+    <!-- 9. Evidence-Based Intelligence -->
+    <section id="repo-intelligence">
+      <h2>9. Evidence-Based Repository Intelligence</h2>
+      <p>The DevKit enforces strict epistemic standards through the 4-tier <strong>Evidence Rubric</strong>:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Tier</th>
+            <th>Category</th>
+            <th>Definition & Constraint</th>
+            <th>Action Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Tier 1</strong></td>
+            <td>Evidence-Supported</td>
+            <td>Corroborated by explicit files, manifests, or tests in the target repository.</td>
+            <td>Cite source file path (e.g. <code>Evidence: `src/auth.ts`</code>). Proceed autonomously.</td>
+          </tr>
+          <tr>
+            <td><strong>Tier 2</strong></td>
+            <td>Reasonable Assumption</td>
+            <td>Standard industry default consistent with the detected framework.</td>
+            <td>Tag as <code>[ASSUMPTION: reasonable-default]</code>. Proceed autonomously.</td>
+          </tr>
+          <tr>
+            <td><strong>Tier 3</strong></td>
+            <td>Design Choice</td>
+            <td>Subjective engineering decision made by the agent among valid options.</td>
+            <td>Document as formal ADR in <code>decisions.md</code> with rejected alternatives.</td>
+          </tr>
+          <tr>
+            <td><strong>Tier 4</strong></td>
+            <td>Critical Ambiguity</td>
+            <td>Contradictory or missing core requirement that fundamentally blocks planning.</td>
+            <td>Trigger interactive Q&A pause (max 1 pause, max 5 questions). Proceed upon reply.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout">
+        <strong>Convention Precedence Rule:</strong> Target repository code <em>always</em> overrides external framework conventions. If a codebase uses custom folder naming, custom casing, or a custom error pattern, the DevKit strictly mirrors the repository pattern.
+      </div>
+    </section>
+
+    <!-- 10. Harness Independence -->
+    <section id="harness-independence">
+      <h2>10. Harness Independence</h2>
+      <p>The core planning engine resides completely in <code>core/</code> and has zero knowledge of Antigravity or any proprietary agent platform. It executes using four generic primitives:</p>
+      <ol>
+        <li><strong>Workspace Access & Sandboxed I/O:</strong> Read access to repo root; write access strictly restricted to <code>.devkit/</code>.</li>
+        <li><strong>Instruction Injection:</strong> Injects <code>core/orchestrator.md</code> as the primary agent prompt.</li>
+        <li><strong>Human Clarification Relay:</strong> Relays Tier 4 questions to the user in interactive runtimes (or chooses safe defaults in headless mode).</li>
+        <li><strong>Tool Independence:</strong> Operates using standard file read/write operations without requiring background daemon processes.</li>
+      </ol>
+      <p>
+        Currently, a production adapter is provided for <strong>Google Antigravity</strong> (<code>adapters/antigravity/</code>). Adapters for Claude Code, Cursor, and Copilot CLI can be implemented against the contract in <code>adapters/generic_contract.md</code>.
+      </p>
+    </section>
+
+    <!-- 11. Checkpoint & Recovery -->
+    <section id="checkpoint-recovery">
+      <h2>11. Checkpoint & Recovery Protocol</h2>
+      <p>The DevKit is immune to session context resets, agent quota cuts, or process interruptions:</p>
+      <div class="diagram-container">
+        <pre class="mermaid">
+stateDiagram-v2
+    [*] --> CheckpointCheck: Invocation with (repo, statement)
+
+    state CheckpointCheck {
+        InspectRunState: Read .devkit/run-state/stage-log.md
+        HashValidation: Validate SHA-256(statement)
+        InspectRunState --> HashValidation
+    }
+
+    CheckpointCheck --> NewRun: No run-state found
+    CheckpointCheck --> HashMismatch: Hash mismatch (different feature)
+    CheckpointCheck --> ValidResumption: Hash matches (interrupted run)
+
+    state HashMismatch {
+        PurgeOld: Purge stale .devkit/run-state/
+        LogWarning: Log safety warning
+        PurgeOld --> LogWarning
+    }
+    HashMismatch --> NewRun
+
+    state ValidResumption {
+        DetectStage: Read last COMPLETED stage
+        FastForward: Skip completed stages
+        DetectStage --> FastForward
+    }
+
+    NewRun --> Pipeline: Start at Stage 1
+    ValidResumption --> Pipeline: Resume at interrupted stage
+
+    state Pipeline {
+        ExecuteRemainingStages: Execute remaining stages autonomously
+    }
+
+    Pipeline --> Interruption: Process halted
+    Interruption --> [*]: Checkpoints preserved on disk
+
+    Pipeline --> Complete: Stage 8 Completes
+    state Complete {
+        Promote: Promote stage-log.md to plan-run.log
+        Purge: Delete temporary run-state files
+        Promote --> Purge
+    }
+    Complete --> [*]: Blueprint Ready
+        </pre>
+      </div>
+      <div class="diagram-caption">Source: <code>docs/diagrams/checkpoint_recovery.mmd</code></div>
+    </section>
+
+    <!-- 12. Quality Gates -->
+    <section id="quality-gates">
+      <h2>12. Deterministic Quality Gates</h2>
+      <p>Before any plan is finalized in Stage 8, it must pass 5 Hard Quality Gates:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Gate ID</th>
+            <th>Gate Name</th>
+            <th>Validation Rule</th>
+            <th>Enforcement Utility</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>QG-H1</strong></td>
+            <td>100% Path Grounding</td>
+            <td>Every target file must exist on disk or be explicitly tagged <code>[NEW FILE: path]</code>. Zero fabricated paths.</td>
+            <td><code>tests/unit/path_grounding.py</code></td>
+          </tr>
+          <tr>
+            <td><strong>QG-H2</strong></td>
+            <td>Task DAG Acyclicity</td>
+            <td>The task dependency graph must be a valid DAG with zero circular dependencies (Kahn's algorithm).</td>
+            <td><code>tests/unit/dag_validator.py</code></td>
+          </tr>
+          <tr>
+            <td><strong>QG-H3</strong></td>
+            <td>Requirement Traceability</td>
+            <td>100% of <code>FR-xxx</code> requirements in <code>feature-spec.md</code> must map to at least one <code>TASK-xxx</code> card.</td>
+            <td><code>tests/unit/traceability_validator.py</code></td>
+          </tr>
+          <tr>
+            <td><strong>QG-H4</strong></td>
+            <td>Validation Traceability</td>
+            <td>100% of <code>AC-xxx</code> acceptance criteria in <code>feature-spec.md</code> must map to at least one <code>TC-xxx</code> test specification.</td>
+            <td><code>tests/unit/traceability_validator.py</code></td>
+          </tr>
+          <tr>
+            <td><strong>QG-H5</strong></td>
+            <td>Source Code Non-Mutation</td>
+            <td>Zero file modifications outside <code>.devkit/</code>. Application code and existing tests must be 100% untouched.</td>
+            <td><code>tests/integration/test_non_mutation.py</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 13. Current Scope & Limitations -->
+    <section id="scope-limits">
+      <h2>13. Current MVP Scope & Limitations</h2>
+      <div class="callout callout-amber">
+        <strong>Distinguishing Current MVP Capabilities from Future Possibilities:</strong>
+      </div>
+      <ul>
+        <li><strong>Supported Archetypes (Current):</strong> Heuristic classification for App, Library, Data Engineering, Infrastructure, and Monorepo. Highly obscure, multi-root, or bespoke polyglot repositories fall back gracefully to <em>Unknown</em>.</li>
+        <li><strong>Execution Environment (Current):</strong> Google Antigravity Skill Adapter is fully implemented and tested. Other harnesses (Cursor, Claude Code) currently require prompt injection per <code>adapters/generic_contract.md</code>.</li>
+        <li><strong>Distribution (Current):</strong> Local workspace skill copying (`.agents/skills/feature-planner/`) or global Antigravity configuration. The DevKit is not currently published on an external public marketplace or package registry.</li>
+        <li><strong>Language & Framework Independence (Current):</strong> Does not compile or execute application code; analyzes text files, AST-like structures, and manifests. Works across TypeScript, Python, Go, Rust, Java, and others.</li>
+      </ul>
+    </section>
+
+    <!-- 14. Getting Started -->
+    <section id="getting-started">
+      <h2>14. How to Get Started</h2>
+      <p>To start using the DevKit in an existing project in under 5 minutes:</p>
+      <pre><code># 1. In your project, copy the feature-planner skill:
+mkdir -p .agents/skills/feature-planner
+cp -r /path/to/agentic-feature-planning-devkit/adapters/antigravity/* .agents/skills/feature-planner/
+cp -r /path/to/agentic-feature-planning-devkit/core .agents/skills/feature-planner/
+
+# 2. In Antigravity chat, simply ask:
+"Plan feature: Add rate limiting to the login endpoint to prevent brute-force attacks"
+
+# 3. Review your complete implementation plan in:
+# .devkit/plans/login-rate-limiting/</code></pre>
+      <p>See <a href="USER_GUIDE.md"><code>docs/USER_GUIDE.md</code></a> and <a href="QUICKSTART.md"><code>docs/QUICKSTART.md</code></a> for complete step-by-step instructions.</p>
+    </section>
+
+  </main>
+</body>
+</html>

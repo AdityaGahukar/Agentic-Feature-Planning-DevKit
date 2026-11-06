@@ -1,0 +1,65 @@
+flowchart TD
+    subgraph S1["Stage 1: Intake & Clarification"]
+        direction TB
+        In1["Input: Feature Statement + Repo Root"] --> P1["Compute Slug & Check Collision<br/>Evaluate Critical Ambiguity"]
+        P1 --> Out1["Output Checkpoint:<br/>.devkit/run-state/intake.md"]
+    end
+
+    subgraph AmbiguityRelay["Critical Ambiguity Path"]
+        Tier4["Ambiguity Tier 4 Detected?<br/>(Max 1 pause, up to 5 questions)"]
+        UserQ["Interactive Relay in Chat<br/>Developer answers questions"]
+    end
+
+    subgraph S2["Stage 2: Reconnaissance & Archetype"]
+        direction TB
+        In2["Input: Target Repo Filesystem"] --> P2["4-Pass File Scan (Manifests, Tree, Layout)<br/>Compute Archetype Points (Matrix)"]
+        P2 --> Out2["Output Checkpoints:<br/>.devkit/run-state/repo-map.md<br/>.devkit/run-state/repo-type.md"]
+    end
+
+    subgraph S3["Stage 3: Architecture & Conventions"]
+        direction TB
+        In3["Input: Scanned Source Files & Manifests"] --> P3["Algorithm 2: Empirical Extraction<br/>7 Dimensions (Naming, Layout, Errors, etc.)"]
+        P3 --> Out3["Output Checkpoints:<br/>.devkit/run-state/architecture.md<br/>.devkit/run-state/conventions.md"]
+    end
+
+    subgraph S4["Stage 4: Feature Specification"]
+        direction TB
+        In4["Input: intake.md + repo-type.md + conventions.md"] --> P4["Synthesize US-xxx, FR-xxx, AC-xxx<br/>Define Scope & Document Assumptions"]
+        P4 --> Out4["Output Deliverable:<br/>.devkit/plans/feature-slug/feature-spec.md"]
+    end
+
+    subgraph S5["Stage 5: Impact & Risk Analysis"]
+        direction TB
+        In5["Input: feature-spec.md + repo-map.md"] --> P5["Calculate Blast Radius & Touched Files<br/>Identify [NEW FILE] vs Existing<br/>Construct Risk Register"]
+        P5 --> Out5["Output Deliverable:<br/>.devkit/plans/feature-slug/implementation-plan.md (Part 1)"]
+    end
+
+    subgraph S6["Stage 6: Task Decomposition & DAG"]
+        direction TB
+        In6["Input: feature-spec.md + implementation-plan.md"] --> P6["Decompose into Phased TASK-xxx Cards<br/>Path Grounding & Dependency Wiring<br/>Generate Mermaid Flowchart DAG"]
+        P6 --> Out6["Output Deliverable:<br/>.devkit/plans/feature-slug/task-breakdown.md<br/>.devkit/plans/feature-slug/implementation-plan.md (Part 2)"]
+    end
+
+    subgraph S7["Stage 7: Validation Planning"]
+        direction TB
+        In7["Input: feature-spec.md (ACs) + conventions.md"] --> P7["Map 100% AC-xxx to TC-xxx Test Cases<br/>Target Specific Test Files & Commands"]
+        P7 --> Out7["Output Deliverable:<br/>.devkit/plans/feature-slug/validation-plan.md"]
+    end
+
+    subgraph S8["Stage 8: Quality Gate & Blueprint Finalization"]
+        direction TB
+        In8["Input: All Generated Artifacts + Checkpoints"] --> P8["Execute Hard Gates (QG-H1..H5)<br/>Execute Soft Gates (QG-S1..S4)<br/>Generate decisions.md & run-summary.md<br/>Promote stage-log.md to plan-run.log<br/>Purge .devkit/run-state/"]
+        P8 --> Out8["Final Complete Blueprint Package<br/>in .devkit/plans/feature-slug/"]
+    end
+
+    %% Pipeline Flow
+    S1 --> Tier4
+    Tier4 -- "Yes" --> UserQ
+    UserQ --> S2
+    Tier4 -- "No" --> S2
+    S2 --> S3
+    S3 --> S4
+    S4 --> S5
+    S5 --> S6
+    S6 --> S7
+    S7 --> S8
