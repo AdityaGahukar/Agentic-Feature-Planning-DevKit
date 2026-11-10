@@ -131,6 +131,12 @@ Please implement Phase 1, TASK-001."
 
 Because every file path is grounded in your actual codebase and every requirement has an explicit test case, the implementation proceeds quickly and reliably.
 
+### ⏸️ Resuming an Interrupted Plan
+If planning is interrupted:
+- **In the same chat:** Type `continue` to resume immediately.
+- **In a fresh chat:** Re-enter the **exact same feature statement** or prompt `Resume planning from .devkit/run-state/`.
+- **Starting fresh:** Modifying prompt wording creates a new SHA-256 hash, automatically clearing temporary run-state and starting fresh.
+
 ---
 
 ## 7. Should I commit `.devkit/` to Git?

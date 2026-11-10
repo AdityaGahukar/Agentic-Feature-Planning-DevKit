@@ -177,14 +177,22 @@ Add this line to your project's `.gitignore`:
 
 ## 9. What if planning is interrupted?
 
-If your session disconnects or an AI tool runs out of quota midway through planning:
+If your session disconnects, hits a token limit, or pauses midway through planning:
 
 1. **Your progress is preserved:** After every stage, intermediate state is saved inside `.devkit/run-state/`.
-2. **Resume simply by asking again:** Open a new session and send the exact same feature prompt:
-   ```text
-   Plan feature: Add retry handling with exponential backoff to the Stripe payment client.
-   ```
-3. The DevKit validates the statement's SHA-256 hash and resumes immediately from the interrupted stage without re-running prior stages.
+2. **In the same chat session:** Simply type `continue`. The agent retains session context and resumes the orchestrator loop where it left off.
+3. **In a brand-new chat session:**
+   - **Send the exact same feature prompt:**
+     ```text
+     Plan feature: Add retry handling with exponential backoff to the Stripe payment client.
+     ```
+     The DevKit validates the statement's SHA-256 hash against `stage-log.md` and resumes immediately from the interrupted stage without re-running prior stages.
+   - **Or explicitly resume:**
+     ```text
+     Resume the in-progress planning run from .devkit/run-state/
+     ```
+4. **Why changing the prompt starts fresh:**
+   If you modify the prompt wording (e.g., adding words like *"in this project"*), the SHA-256 hash changes. The DevKit's stale-state safeguard (Algorithm 3) intentionally clears `.devkit/run-state/` and starts a brand-new plan to avoid cross-feature contamination. (Typing only `continue` in a brand-new chat will also fail because the new session lacks context and the hash check fails).
 
 ---
 

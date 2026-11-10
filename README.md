@@ -138,6 +138,12 @@ Please implement Phase 1, TASK-001."
 ```
 Because the agent now has exact file paths, explicit acceptance criteria, and predefined test cases, implementation is dramatically faster and avoids breaking existing code.
 
+#### Resuming an Interrupted Plan:
+If an agent disconnects, runs out of quota, or pauses midway:
+- **In the same chat:** Type `continue`—the assistant retains session context and completes the remaining stages.
+- **In a new chat:** Re-send the **exact same feature statement** (e.g., `Plan feature: <statement>`) or prompt `Resume planning from .devkit/run-state/`. The DevKit validates the SHA-256 statement hash against `stage-log.md`, skips completed stages, and resumes where it stopped.
+- **Starting fresh vs. Resuming:** Changing prompt wording (e.g. adding extra words) alters the SHA-256 hash. The DevKit's stale-state safeguard intentionally treats altered wording as a new feature request, purges temporary run-state, and starts fresh to prevent cross-feature contamination. (Typing only `continue` in a new chat lacks session context and will not resume).
+
 ---
 
 ## 📁 Git Workflow & Recommendations
